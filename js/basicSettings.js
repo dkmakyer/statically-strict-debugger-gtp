@@ -19,17 +19,6 @@ class Light extends General {
 
     }
 
-    displayNotification (message, position, container) {
-        const html = this.notification(message);
-        this.renderHTML(html, position, container);
-    }
-
-    removeNotification (element) {
-        setTimeout(() => {
-            element.remove();
-        }, 5000);
-    }
-
     lightSwitchOn (lightButtonElement) {
         lightButtonElement.setAttribute('src', './assets/svgs/light_bulb.svg');
         lightButtonElement.setAttribute('data-lightOn', './assets/svgs/light_bulb_off.svg');
@@ -38,7 +27,7 @@ class Light extends General {
     lightSwitchOff (lightButtonElement) {
         lightButtonElement.setAttribute('src', './assets/svgs/light_bulb_off.svg');
         lightButtonElement.setAttribute('data-lightOn', './assets/svgs/light_bulb.svg');
-    };
+    }
 
     lightComponentSelectors(lightButtonElement) {
         const room = this.getSelectedComponentName(lightButtonElement);
@@ -72,7 +61,7 @@ class Light extends General {
     handleLightIntensitySlider(element, intensity) {
         const { componentData } = this.lightComponentSelectors(element);
 
-        if (typeof(intensity) !== 'number' || isNaN(intensity)) return;
+        if (typeof intensity !== 'number' || isNaN(intensity)) return;
 
         componentData.lightIntensity = intensity; 
 
@@ -91,6 +80,8 @@ class Light extends General {
         const { componentData: component, childElement, background } = this.lightComponentSelectors(lightButtonElement);
 
         if (!component) return;
+
+        component.isLightOn = isLightOn;
         
         if (isLightOn) {
             this.lightSwitchOn(childElement);
