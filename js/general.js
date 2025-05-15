@@ -75,6 +75,7 @@ class General {
     }
 
     handleLightIntensity(element, lightIntensity) {
+        if(!element) return;
         element.style.filter = `brightness(${lightIntensity})`;
     }
 

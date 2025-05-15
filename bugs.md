@@ -12,3 +12,11 @@
 7. the displayNotification and removeNotification methods in the basicSettings.js file already exist in the general class and have been inherited, removed them to prevent redundancy in the code.
 
 8. the sliderLight method on line 75 of the basicSettings.js file doesnt update the component.isLightOn, added it to fix the code.
+
+9. in line 141 of the advanceSettings.js file, "!!value" converts a value to a boolean instead of checking if it returns true or false. changed it to "!value";
+
+10. removed the message and resolve input parameters in line 233 of the async timer function since they are not being used in the function code.
+
+11. for the format time function, returned null if the time string doesnt include ":" and if it is not a valid time format.
+
+12. removed duplicate close button in marcup code on line 67.

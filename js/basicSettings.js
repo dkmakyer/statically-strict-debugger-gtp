@@ -41,25 +41,30 @@ class Light extends General {
         const { componentData: component, childElement, background } = this.lightComponentSelectors(lightButtonElement);
         const slider = this.closestSelector(lightButtonElement, '.rooms', '#light_intensity')
 
-        if (!component) return;
+        if (!component || !slider) return;
 
         component.isLightOn = !component.isLightOn;
 
         if (component.isLightOn) {
-            this.lightSwitchOn(childElement);
-            component.lightIntensity = 5;
+            this.lightSwitchOn(lightButtonElement);
+            // component.lightIntensity = 5;
             const lightIntensity = component.lightIntensity / 10;
             this.handleLightIntensity(background, lightIntensity);
             slider.value = component.lightIntensity;
+
+            slider.addEventListener('input', (event) => {
+                const intensity = parseInt(event.target.value, 10);
+                this.handleLightIntensitySlider(slider, intensity);
+            });
         } else {
-            this.lightSwitchOff(childElement);
+            this.lightSwitchOff(lightButtonElement);
             this.handleLightIntensity(background, 0);
             slider.value = 0;
         }
     }
 
     handleLightIntensitySlider(element, intensity) {
-        const { componentData } = this.lightComponentSelectors(element);
+        const { componentData, background } = this.lightComponentSelectors(element);
 
         if (typeof intensity !== 'number' || isNaN(intensity)) return;
 
@@ -72,8 +77,10 @@ class Light extends General {
         } else {
             componentData.isLightOn = true;
         }
-
+    
         this.sliderLight(componentData.isLightOn, lightSwitch);
+        const brightness = componentData.lightIntensity / 10;
+        this.handleLightIntensity(background, brightness);
     }
 
     sliderLight(isLightOn, lightButtonElement) {

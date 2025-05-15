@@ -66,9 +66,6 @@ class AdvanceSettings extends Light {
                         <canvas id="myChart"></canvas>
                     </div>
                 </section>
-                <button class="close-btn">
-                    <img src="./assets/svgs/close.svg" alt="close button svg icon">
-                </button>
             </section>
             <button class="close-btn">
                 <img src="./assets/svgs/close.svg" alt="close button svg icon">
@@ -101,7 +98,9 @@ class AdvanceSettings extends Light {
 
     modalPopUp(element) {
         const selectedRoom = this.getSelectedComponentName(element);
+        if (!selectedRoom) return;
         const componentData = this.getComponent(selectedRoom);
+        if (!componentData) return;
         const parentElement = this.selector('.advanced_features_container');
         this.removeHidden(parentElement);
         
@@ -130,7 +129,6 @@ class AdvanceSettings extends Light {
     customizationCancelled(selectedElement, parentSelectorIdentifier) {
         const element = this.closestSelector(selectedElement, parentSelectorIdentifier, 'input');
         element.value = '';
-        return;
     }
 
     customizeAutomaticOnPreset(selectedElement) {
@@ -138,7 +136,7 @@ class AdvanceSettings extends Light {
         const { value } = element;
         
         // when value is falsy
-        if (!!value) return;
+        if (!value) return;
         
         const component = this.getComponentData(element, '.advanced_features', '.component_name');
         component.autoOn = value;
@@ -161,7 +159,7 @@ class AdvanceSettings extends Light {
         const { value } = element;
 
         // when value is falsy
-        if (!!value) return; 
+        if (!value) return; 
         
         const component = this.getComponentData(element, '.advanced_features', '.component_name');
         component.autoOff = value;
@@ -204,8 +202,11 @@ class AdvanceSettings extends Light {
     }
 
     formatTime (time) {
-        const [hour, min] = time.split(':');
-        
+        if (!time || !time.includes(':')) return null;
+        const [hour, min] = time.split(':').map(Number);
+
+        if (isNaN(hour) || isNaN(min)) return null;
+
         const dailyAlarmTime = new Date();
         dailyAlarmTime.setHours(hour); 
         dailyAlarmTime.setMinutes(min);
@@ -221,8 +222,8 @@ class AdvanceSettings extends Light {
         return setTime;
     }
 
-    async timer (time, message, component) {
-        return new Promise ((resolve, reject) => {
+    async timer (time, component) {
+        return new Promise ((resolve) => {
             const checkAndTriggerAlarm = () => {
                 const now = new Date();
                 
@@ -247,7 +248,7 @@ class AdvanceSettings extends Light {
 
     async automateLight (time, component) {
         const formattedTime = this.formatTime(time);
-        return await this.timer(formattedTime, true, component);
+        return await this.timer(formattedTime, component);
     }
 
 
