@@ -1,7 +1,7 @@
 'use strict'
 
-import General from "./general.js";
-import Light from './basicSettings.js';
+import General from "./general.ts";
+import Light from './basicSettings.ts';
 
 class AdvanceSettings extends Light {
     constructor () {
@@ -142,7 +142,6 @@ class AdvanceSettings extends Light {
         const component = this.getComponentData(element, '.advanced_features', '.component_name');
         component.autoOn = value;
         element.value = '';
-        
 
         // selecting display or markup view
         const spanElement = this.selector('.auto_on > span:last-child');
