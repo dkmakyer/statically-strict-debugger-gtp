@@ -14,7 +14,7 @@
     "prepare": "npm run build"
   },
   "dependencies": {
-    "@vercel/node": "^4.2.6",
+    "@vercel/node": "^5.1.16",
     "acorn": "^8.14.1",
     "acorn-walk": "^8.3.4",
     "anymatch": "^3.1.3",

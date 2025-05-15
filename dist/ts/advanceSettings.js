@@ -8,7 +8,6 @@ const chart_js_1 = require("chart.js");
 class AdvanceSettings extends basicSettings_1.default {
     constructor() {
         super();
-        this.componentsData = {};
     }
     markup(component) {
         const { name, numOfLights, autoOn, autoOff } = component;
@@ -167,18 +166,15 @@ class AdvanceSettings extends basicSettings_1.default {
     }
     getSelectedComponent(componentName) {
         if (!componentName)
-            return this.componentsData;
-        return this.componentsData[componentName.toLowerCase()];
+            return undefined;
+        return super.getComponent(componentName);
     }
     getSelectedSettings(componentName) {
         const component = this.getSelectedComponent(componentName);
-        if (component && 'name' in component && 'numOfLights' in component && 'autoOn' in component && 'autoOff' in component && 'usage' in component) {
-            return this.markup(component);
-        }
-        return '';
+        return component ? this.markup(component) : '';
     }
     setNewData(component, key, data) {
-        const selectedComponent = this.componentsData[component.toLowerCase()];
+        const selectedComponent = this.getSelectedComponent(component);
         if (selectedComponent) {
             selectedComponent[key] = data;
         }

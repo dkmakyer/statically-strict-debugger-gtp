@@ -194,7 +194,7 @@ class AdvanceSettings extends Light {
 
     getSelectedComponent(componentName: string): Component | undefined {
         if (!componentName) return undefined;
-        return super.getSelectedComponent(componentName) as Component | undefined;
+        return super.getComponent(componentName) as Component | undefined;
     }
 
     getSelectedSettings(componentName: string): string {
