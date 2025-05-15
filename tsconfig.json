@@ -16,9 +16,9 @@
     "strictPropertyInitialization": true,
     "noImplicitThis": true,
     "alwaysStrict": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "types": ["jest", "node"]
   },
-  "include": ["main.ts", "ts/**/*"],
-  "exclude": ["node_modules", "dist"],
-  "types": ["jest"]
+  "include": ["main.ts", "ts/**/*", "**/*.test.ts"],
+  "exclude": ["node_modules", "dist"]
 }
