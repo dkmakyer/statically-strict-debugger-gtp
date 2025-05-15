@@ -29,6 +29,7 @@ class AdvanceSettings extends Light {
                         <span>Automatic turn off:</span>
                         <span>${autoOff}</span>
                     </p>
+                    <p class="countdown-display"></p>
                 </div>
             </section>
             <section class="customization">
@@ -43,7 +44,7 @@ class AdvanceSettings extends Light {
                         <h4>Automatic on/off settings</h4>
                         <div class="defaultOn">
                             <label for="">Turn on</label>
-                            <input type="time" name="autoOnTime" id="autoOnTime">
+                            <input type="time" name="autoOnTime" id="autoOnTime" value="${this.formatTimeString(autoOn)}">
                             <div>
                                 <button class="defaultOn-okay">Okay</button>
                                 <button class="defaultOn-cancel">Cancel</button>
@@ -51,7 +52,7 @@ class AdvanceSettings extends Light {
                         </div>
                         <div class="defaultOff">
                             <label for="">Go off</label>
-                            <input type="time" name="autoOffTime" id="autoOffTime">
+                            <input type="time" name="autoOffTime" id="autoOffTime" value="${this.formatTimeString(autoOff)}">
                             <div>
                                 <button class="defaultOff-okay">Okay</button>
                                 <button class="defaultOff-cancel">Cancel</button>
@@ -141,6 +142,7 @@ class AdvanceSettings extends Light {
         const component = this.getComponentData(element, '.advanced_features', '.component_name');
         component.autoOn = value;
         element.value = '';
+        
 
         // selecting display or markup view
         const spanElement = this.selector('.auto_on > span:last-child');
@@ -211,44 +213,63 @@ class AdvanceSettings extends Light {
         dailyAlarmTime.setHours(hour); 
         dailyAlarmTime.setMinutes(min);
         dailyAlarmTime.setSeconds(0);
+        dailyAlarmTime.setMilliseconds(0);
         
         return dailyAlarmTime;
     };
 
+    formatTimeString(time) {
+        const date = this.formatTime(time);
+        if (!date) return '';
+        const hrs = String(date.getHours()).padStart(2, '0');
+        const mins = String(date.getMinutes()).padStart(2, '0');
+        return `${hrs}:${mins}`;
+    }
+
     timeDifference (selectedTime) {
         const now = new Date();
-        const setTime = this.formatTime(selectedTime) - now;
+        const setTime = this.formatTime(selectedTime);
+        if (!setTime) return null;
         console.log(setTime, now);
-        return setTime;
+        return setTime - now;
     }
 
-    async timer (time, component) {
-        return new Promise ((resolve) => {
-            const checkAndTriggerAlarm = () => {
-                const now = new Date();
-                
-                if (
-                    now.getHours() === time.getHours() &&
-                    now.getMinutes() === time.getMinutes() &&
-                    now.getSeconds() === time.getSeconds()
-                ) {
-                    resolve(this.toggleLightSwitch(component['element']))
+    async timer(timeString, component) {
+        const diff = this.timeDifference(timeString);
+        if (diff === null || diff <= 0) {
+            console.warn("Scheduled time has already passed.");
+            return;
+        }
 
-                    // stop timer
-                    clearInterval(intervalId);
-                    
-                }
+    
+        const countdownEl = this.selector('.countdown-display'); 
+        const intervalId = setInterval(() => {
+            const remainingTime = this.timeDifference(timeString);
+            if (remainingTime <= 0) {
+                clearInterval(intervalId);
+                this.toggleLightSwitch(component['element']);
+                if (countdownEl) countdownEl.textContent = "Time's up!";
+            } else {
+                const hours = Math.floor((remainingTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+                if (countdownEl) countdownEl.textContent = `Time left: ${hours}h ${minutes}m ${seconds}s`;
             }
-        
-            // Check every second
-            const intervalId = setInterval(checkAndTriggerAlarm, 1000);
+        }, 1000);
+    
 
-        })
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                clearInterval(intervalId);
+                this.toggleLightSwitch(component['element']);
+                resolve();
+            }, diff);
+        });
     }
+    
 
     async automateLight (time, component) {
-        const formattedTime = this.formatTime(time);
-        return await this.timer(formattedTime, component);
+        return await this.timer(time, component);
     }
 
 
