@@ -78,15 +78,6 @@
     "url": "https://github.com/dkmakyer/statically-strict-debugger-gtp/issues"
   },
   "homepage": "https://github.com/dkmakyer/statically-strict-debugger-gtp#readme",
-  "jest": {
-    "preset": "ts-jest",
-    "testEnvironment": "node",
-    "transform": {
-      "^.+\\.tsx?$": "ts-jest"
-    },
-    "moduleFileExtensions": ["ts", "js", "json"],
-    "testMatch": ["**/*.test.ts"]
-  },
   "engines": {
     "node": ">=18.x"
   }
