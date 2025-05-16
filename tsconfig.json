@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "module": "CommonJS",
-    "rootDir": ".",
-    "outDir": "./dist",
+    "target": "ES2020",       
+    "module": "ESNext",                   
+    "rootDir": "src",                     
+    "outDir": "dist",                     
     "esModuleInterop": true,
     "moduleResolution": "node",
     "resolveJsonModule": true,
@@ -17,8 +17,8 @@
     "noImplicitThis": true,
     "alwaysStrict": true,
     "forceConsistentCasingInFileNames": true,
-    "types": ["jest", "node"]
+    "types": []
   },
-  "include": ["main.ts", "ts/**/*", "**/*.test.ts"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]
 }
