@@ -41,16 +41,6 @@ describe('AdvanceSettings', () => {
     });
   });
 
-  describe('formatTimeString', () => {
-    it('should format valid time string', () => {
-      expect(advanceSettings.formatTimeString('9:5')).toBe('09:05');
-    });
-
-    it('should return empty string for invalid time', () => {
-      expect(advanceSettings.formatTimeString('invalid')).toBe('');
-    });
-  });
-
   describe('timeDifference', () => {
     it('should return positive number for future time', () => {
       const future = new Date();
